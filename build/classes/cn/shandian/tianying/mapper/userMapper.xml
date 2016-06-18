@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.shandian.tianying.service.IUserLoginMapper">
+	<resultMap type="User" id="resultListUser">
+		<id column="id" property="id"></id>
+		<result column="userName" property="userName"></result>
+		<result column="userAge" property="userAge"></result>
+		<result column="userAddress" property="userAddress"></result>
+	</resultMap>
+
+	<select id="loginUser" parameterType="User" resultType="User">
+		select *
+		from `user` where userName = #{userName}
+	</select>
+	<select id="loginUserPassword" parameterType="User" resultType="User">
+		select *
+		from `user` where userName = #{userName} and userPassword
+		=#{userPassword}
+	</select>
+
+	<select id="selectUserById" parameterType="int" resultType="User">
+		select * from `user` where id = #{id}
+	</select>
+
+	<select id="selectUsers" parameterType="string" resultMap="resultListUser">
+		select * from `user` where 1 = 1
+		<if test="userName!= null and ''!=userName">
+		<![CDATA[
+		AND userName = #{userName}
+		]]>
+		</if>
+	</select>
+
+	<select id="selectUserbyUser" parameterType="User" resultMap="resultListUser">
+		SELECT * FROM user WHERE 1= 1
+		<if test="userName!= null and ''!=userName">
+		<![CDATA[
+		AND userName = #{userName}
+		]]>
+			<if test="userAge!=null and ''!=userAge">
+		<![CDATA[
+		AND userAge = #{userAge}
+		]]>
+			</if>
+		</if>
+	</select>
+
+	<select id="selectlikeUserByUser" parameterType="User"
+		resultMap="resultListUser">
+		SELECT * FROM user
+		<where>
+			<if test="userName!=null">
+		<![CDATA[
+			userName LIKE CONCAT('%','${userName}','%')
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="geUserCount" statementType="CALLABLE" parameterMap="getUserCountMap">
+		CALl getUserCount(?,?)
+	</select>
+	<parameterMap type="java.util.Map" id="getUserCountMap">
+		<parameter property="uAge" mode="IN" jdbcType="INTEGER" />
+		<parameter property="user_count" mode="OUT" jdbcType="INTEGER" />
+	</parameterMap>
+
+
+	<insert id="addUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		user(userName,userAge,userAddress,userPassword)
+		values(#{userName},#{userAge},#{userAddress},#{userPassword})
+	</insert>
+
+	<update id="updateUser" parameterType="User">
+		update user set
+		userName=#{userName},userAge=#{userAge},userAddress=#{userAddress}
+		where id=#{id}
+	</update>
+
+	<update id="deleteUser" parameterType="String">
+		delete from user where
+		id=#{id}
+	</update>
+	<!-- <resultMap id="userArticleList" type="Article"> <id property="id" column="aid"></id> 
+		<result property="title" column="title"></result> <result property="content" 
+		column="content"></result> <association property="user" javaType="User"> 
+		<id property="id" column="id"></id> <result property="userName" column="userName"></result> 
+		<result property="userAge" column="userAge"></result> <result property="userAddress" 
+		column="userAddress"></result> </association> </resultMap> <select id="getUserArticle" 
+		parameterType="int" resultMap="userArticleList"> select user.id,user.userName,user.userAddress,article.id 
+		aid,article.title,article.content from user,article where user.id=article.userid 
+		and user.id=#{id} </select> -->
+
+</mapper>

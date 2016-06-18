@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>springweb</display-name>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/404.jsp</location>
+	</error-page>
+	<welcome-file-list>
+		<welcome-file>/index.jsp</welcome-file>
+		<welcome-file>/WEB-INF/index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:beans.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+	<!-- <bean id="multipartResolver" -->
+	<!-- class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
+	<!--1024*200即200k -->
+	<!-- <property name="maxUploadSize" value="204800" /> -->
+	<!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常 -->
+	<!-- <property name="resolveLazily" value="true" /> -->
+	<!-- </bean> -->
+	<servlet>
+		<servlet-name>spring-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-dispather.xml</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring-dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>
